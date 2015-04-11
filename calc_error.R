@@ -1,6 +1,3 @@
-###########################################
-#function to calculate the model error
-###########################################
 calc_error <- function(act,pred)
 {
   aact <- as.matrix(act)
@@ -13,7 +10,7 @@ calc_error <- function(act,pred)
   }
   
 }
-#### EOF to calcualte model error ####
+
 
 
 

@@ -26,7 +26,7 @@ test<-alldata[testrows,]
 
 
 
-
+#DO NOT MODIFY FROM ABOVE THIS LINE HERE
 
 ############################################build the GBM model#############################################
 library(gbm)
@@ -122,12 +122,25 @@ fnname <- "GBM_demo1.csv"
 write.csv(predictionFile, file=fnname, row.names = FALSE)
 
 ############################################################################################################
+#ADD OTHER MODELS FROM HERE
+
+
 
 ####################################RMSE EVALUATION########################################################
+#GBM
+y3.prediction <- read.csv('GBM_demo1.csv')
+names(y3.prediction)[2] = 'DaysInHospital.Prediction'
 
+y3.merge <- merge (y3.actual, y3.prediction, by='MemberID')
+calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
+
+#mars
 y3.prediction <- read.csv('MARS_demo1.csv')
 names(y3.prediction)[2] = 'DaysInHospital.Prediction'
 
 y3.merge <- merge (y3.actual, y3.prediction, by='MemberID')
 calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
+####################
+#ADD OTHER MODELS EVALUATION FROM HERE
+
 
