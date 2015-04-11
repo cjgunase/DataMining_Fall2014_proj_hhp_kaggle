@@ -24,7 +24,7 @@ train<-alldata[trainrows,]
 test<-alldata[testrows,]
 
 
-
+first build models then run eval
 
 #DO NOT MODIFY FROM ABOVE THIS LINE HERE
 
