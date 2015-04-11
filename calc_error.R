@@ -16,9 +16,4 @@ calc_error <- function(act,pred)
 #### EOF to calcualte model error ####
 
 
-y3.actual <- read.csv('DaysInHospital_Y3.csv')
-y3.prediction <- read.csv('GBM_demo1.csv')
-names(y3.prediction)[2] = 'DaysInHospital.Prediction'
 
-y3.merge <- merge (y3.actual, y3.prediction, by='MemberID')
-calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
