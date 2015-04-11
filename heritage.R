@@ -30,7 +30,7 @@ test<-alldata[testrows,]
 ###new model####
 
 #lm(whatever)
-
+#predict
 
 ############################################build the GBM model#############################################
 library(gbm)
