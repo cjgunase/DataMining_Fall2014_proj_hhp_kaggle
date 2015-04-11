@@ -24,9 +24,13 @@ train<-alldata[trainrows,]
 test<-alldata[testrows,]
 
 
-first build models then run eval
+#first build models then run eval
 
 #DO NOT MODIFY FROM ABOVE THIS LINE HERE
+###new model####
+
+#lm(whatever)
+
 
 ############################################build the GBM model#############################################
 library(gbm)
