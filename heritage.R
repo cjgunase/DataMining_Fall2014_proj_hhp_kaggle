@@ -22,15 +22,13 @@ targindex <-  which(names(alldata)==theTarget)
 #split the data to train and test set
 train<-alldata[trainrows,]
 test<-alldata[testrows,]
-
-
+dim(train)
+dim(test)
 #first build models then run eval
 
 #DO NOT MODIFY FROM ABOVE THIS LINE HERE
 ###new model####
 
-#lm(whatever)
-#predict
 
 ############################################build the GBM model#############################################
 library(gbm)
@@ -126,8 +124,31 @@ fnname <- "GBM_demo1.csv"
 write.csv(predictionFile, file=fnname, row.names = FALSE)
 
 ############################################################################################################
-#ADD OTHER MODELS FROM HERE
+#######################################Random Forest########################################################
 
+library(randomForest)
+newModel <- randomForest(x = train[1:1000,-targindex], y = train[1:1000,targindex], ntree=10)
+
+
+prediction <- predict(object = newModel, newdata = test[,-targindex], type="response",
+                      norm.votes=TRUE, predict.all=FALSE, proximity=FALSE, nodes=FALSE)
+
+
+prediction <- expm1(prediction)
+prediction <- pmin(15,prediction)
+prediction <- pmax(0,prediction)
+
+#plot the predictionFile distribution
+hist(prediction, breaks=500)
+
+predictionFile <- cbind(memberid,prediction)
+colnames(predictionFile) <- c("MemberID","DaysInHospital")
+fnname <- "RF_demo1.csv"
+write.csv(predictionFile, file=fnname, row.names = FALSE)
+
+# Calculate Importance
+importance <- importance(newModel, type=NULL, class=NULL, scale=TRUE)
+impSort <- sort(importance, decreasing = TRUE, index.return = TRUE)
 
 
 ####################################RMSE EVALUATION########################################################
@@ -144,7 +165,13 @@ names(y3.prediction)[2] = 'DaysInHospital.Prediction'
 
 y3.merge <- merge (y3.actual, y3.prediction, by='MemberID')
 calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
-####################
-#ADD OTHER MODELS EVALUATION FROM HERE
+
+#RF
+y3.prediction <- read.csv('RF_demo1.csv')
+names(y3.prediction)[2] = 'DaysInHospital.Prediction'
+
+y3.merge <- merge (y3.actual, y3.prediction, by='MemberID')
+calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
+
 
 
