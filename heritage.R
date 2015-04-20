@@ -120,7 +120,7 @@ prediction <- pmax(0,prediction)
 hist(prediction, breaks=500)
 predictionFile <- cbind(memberid,prediction)
 colnames(predictionFile) <- c("MemberID","DaysInHospital")
-fnname <- "GBM_demo1.csv"
+fnname <- "PLS_demo1.csv"
 write.csv(predictionFile, file=fnname, row.names = FALSE)
 
 ############################################################################################################
