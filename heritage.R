@@ -151,6 +151,48 @@ importance <- importance(newModel, type=NULL, class=NULL, scale=TRUE)
 impSort <- sort(importance, decreasing = TRUE, index.return = TRUE)
 
 
+############################################################################################################
+#######################################Neural net########################################################
+library(nnet)
+nnetFit <- nnet(train[1:1000,-targindex], train[1:1000,targindex],size = 5,decay = 0.01,linout = TRUE, trace = FALSE,maxit = 500,MaxNWts = 5 * (ncol(train[,-2]) + 1) + 5 + 1)
+prediction<-predict(nnetFit,newdata = test[,-targindex])
+
+prediction <- expm1(prediction)
+prediction <- pmin(15,prediction)
+prediction <- pmax(0,prediction)
+
+#plot the predictionFile distribution
+hist(prediction, breaks=500)
+prediction<-predict(marsFit,newdata = test[,-targindex])
+predictionFile <- cbind(memberid,prediction)
+colnames(predictionFile) <- c("MemberID","DaysInHospital")
+fnname <- "ANN_demo1.csv"
+write.csv(predictionFile, file=fnname, row.names = FALSE)
+
+############################################################################################################
+################################################Shivam code############################################################
+
+
+
+RMSE(nn,train[,2])
+nnt<-predict(nnetFit,-test[,-targindex])
+nntest<- cbind(memberid,nnt)
+names(nntest)<-c("MemberID","DaysInHospital")
+y3.merge <- merge (y3.actual, nntest, by='MemberID')
+calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
+
+
+library(earth)
+mars_model<-earth(train[,-targindex],train[,targindex])
+mp<-predict(mars_model,train[,-targindex])
+RMSE(mp,train[,targindex])
+mpt<-predict(mars_model,test[,-targindex])
+RMSE(mpt,y3.actual$DaysInHospital)
+
+
+
+
+
 ####################################RMSE EVALUATION########################################################
 #GBM
 y3.prediction <- read.csv('GBM_demo1.csv')
@@ -174,4 +216,9 @@ y3.merge <- merge (y3.actual, y3.prediction, by='MemberID')
 calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
 
 
+#NN
+y3.prediction <- read.csv('ANN_demo1.csv')
+names(y3.prediction)[2] = 'DaysInHospital.Prediction'
 
+y3.merge <- merge (y3.actual, y3.prediction, by='MemberID')
+calc_error(y3.merge$DaysInHospital, y3.merge$DaysInHospital.Prediction)
